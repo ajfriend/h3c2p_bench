@@ -1,33 +1,42 @@
 # H3 cells-to-polygon benchmarks
 
-Compares the performance of H3's cells-to-polygon functions across different
-versions of the library, using the Colorado state boundary as a test polygon
-at resolutions 3-8.
+Compares the performance of H3's cells-to-polygon functions across library
+versions, using the Colorado state boundary as a test polygon at resolutions
+3–9.
 
 ## Checkpoints
 
-Each checkpoint is a snapshot of the H3 library at a specific point in time,
-paired with a benchmark that exercises the cells-to-polygon API available in
-that version.
+| Checkpoint | H3 source                 | Function benchmarked                              |
+|------------|---------------------------|---------------------------------------------------|
+| `v4.4.1`   | uber/h3 v4.4.1            | `cellsToLinkedMultiPolygon`                       |
+| `v4.5a`    | uber/h3 master            | `cellsToMultiPolygon`                             |
+| `gosper`   | ajfriend/h3 gosper branch | `cellsToMultiPolygonGosper` (pre-compacted input) |
+| `gosper+c` | ajfriend/h3 gosper branch | `compactCells` + `cellsToMultiPolygonGosper`      |
 
-| Checkpoint | H3 version | Function benchmarked        |
-|------------|------------|-----------------------------|
-| `master`   | Latest     | `cellsToMultiPolygon` (new) |
-| `v4.4.1`   | v4.4.1     | `cellsToLinkedMultiPolygon` |
+- **v4.4.1**: The old cells-to-polygon algorithm, before the rewrite.
+- **v4.5a**: The rewritten cells-to-polygon algorithm (planned for v4.5), but without the Gosper optimization.
+- **gosper**: The Gosper-based algorithm operating on pre-compacted cells (compaction time not measured).
+- **gosper+c**: Same algorithm, but includes `compactCells` in the timed section — a fairer end-to-end comparison starting from uncompacted input.
 
-## Project structure
+## Results
 
-```
-checkpoints/
-  master/
-    h3/                      git submodule pinned to master
-    benchmarkColorado.c      benchmark source
-  v4.4.1/
-    h3/                      git submodule pinned to v4.4.1 tag
-    benchmarkColorado.c      benchmark source
-bench.py                     runs binaries, parses output, reports results
-justfile                     builds h3 + benchmarks, orchestrates runs
-```
+Speedups are relative to `v4.4.1`. Times are the minimum across 5 runs.
+
+| resolution     |     cells | compact |  v4.4.1 |   v4.5a | gosper | gosper+c | v4.5a vs | gosper vs | gosper+c vs |
+|----------------|----------:|--------:|--------:|--------:|-------:|---------:|---------:|----------:|------------:|
+| colorado_res_3 |        20 |      14 |    27µs |    15µs |   14µs |     15µs |     1.9x |      1.9x |        1.9x |
+| colorado_res_4 |       140 |      56 |   162µs |    55µs |   47µs |     48µs |     2.9x |      3.4x |        3.4x |
+| colorado_res_5 |       974 |     170 |   1.2ms |   311µs |  167µs |    173µs |     3.8x |      7.1x |        6.9x |
+| colorado_res_6 |     6,831 |     501 |   8.4ms |   2.0ms |  579µs |    636µs |     4.2x |     14.5x |       13.2x |
+| colorado_res_7 |    47,823 |   1,419 |  56.3ms |  25.8ms |  2.1ms |    2.5ms |     2.2x |     27.4x |       22.3x |
+| colorado_res_8 |   334,719 |   3,813 | 444.4ms | 273.1ms |  7.5ms |   10.9ms |     1.6x |     59.4x |       40.9x |
+| colorado_res_9 | 2,343,047 |  10,169 |  14.58s |   2.00s | 38.2ms |   75.6ms |     7.3x |    382.1x |      193.0x |
+
+- **cells**: number of H3 cells covering Colorado at that resolution
+- **compact**: number of cells after `compactCells`
+- **gosper**: operates on pre-compacted input (compaction not timed)
+- **gosper+c**: compaction is included in the timed section
+- **vs** columns: speedup as a ratio of `v4.4.1` time / checkpoint time
 
 ## Usage
 
@@ -36,28 +45,8 @@ git clone --recursive <this-repo>
 just
 ```
 
-This builds both H3 versions, compiles the benchmarks against `libh3.a`,
-runs each benchmark binary 5 times, and reports the minimum time per
-resolution across runs.
+Requires: cmake, a C compiler, [just](https://github.com/casey/just),
+and [uv](https://github.com/astral-sh/uv).
 
-## How it works
-
-1. **Build**: For each checkpoint, `just` builds `libh3.a` via cmake, then
-   compiles `benchmarkColorado.c` against it with `cc -O3`. The H3 submodule
-   source is never modified.
-
-2. **Run**: `bench.py` executes each compiled benchmark binary multiple times
-   (default 5). Each run internally iterates the function many times per
-   resolution (10,000 at res 3, down to 5 at res 8) and reports the average.
-
-3. **Report**: The minimum average across runs is taken for each resolution,
-   filtering out system noise. Results are printed as a side-by-side table
-   and written to `results/results.json`.
-
-## Adding a new checkpoint
-
-1. `mkdir checkpoints/<name>`
-2. `git submodule add https://github.com/uber/h3.git checkpoints/<name>/h3`
-3. `cd checkpoints/<name>/h3 && git checkout <tag-or-commit>`
-4. Write `checkpoints/<name>/benchmarkColorado.c` using the API from that version
-5. Run `just` -- the new checkpoint is discovered automatically
+See [architecture.md](architecture.md) for build details and how to add new
+checkpoints.
