@@ -1,0 +1,6 @@
+[submodule "h3-master"]
+	path = h3-master
+	url = https://github.com/uber/h3.git
+[submodule "h3-release"]
+	path = h3-release
+	url = https://github.com/uber/h3.git
