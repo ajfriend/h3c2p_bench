@@ -1,6 +1,6 @@
 """Benchmark runner and reporter for H3 checkpoint comparison."""
 # /// script
-# dependencies = ["tabulate"]
+# dependencies = ["tabulate", "pandas"]
 # ///
 
 import json
@@ -9,6 +9,7 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pandas as pd
 from tabulate import tabulate
 
 RUNS = 5
@@ -81,15 +82,28 @@ for cp in checkpoints:
 
 # --- Report ---
 
-labels = list(next(iter(all_data.values())).keys())
-table = [
-    [label] + [f"{all_data[cp][label]:,.2f}" for cp in all_data]
-    for label in labels
-]
-headers = ["resolution"] + list(all_data.keys())
+def fmt_us(us):
+    if us >= 1_000_000:
+        return f"{us / 1_000_000:,.2f}s"
+    if us >= 1_000:
+        return f"{us / 1_000:,.1f}ms"
+    return f"{us:,.0f}µs"
+
+df = pd.DataFrame(all_data).rename_axis("resolution")
+baseline = df.columns[0]
+
+# Build display table: formatted times + speedup columns
+display = pd.DataFrame(index=df.index)
+display[baseline] = df[baseline].map(fmt_us)
+for name in df.columns[1:]:
+    display[name] = df[name].map(fmt_us)
+    speedup = df[name] / df[baseline]
+    display[f"{name} vs"] = speedup.map(
+        lambda x: f"{x:.1f}x" if x >= 1.05 else "~1x"
+    )
 
 print(f"\nResults ({RUNS} runs, minimum per resolution, µs)\n")
-print(tabulate(table, headers=headers, colalign=("left", *("right",) * len(all_data))))
+print(tabulate(display, headers="keys", colalign=("left", *("right",) * len(display.columns))))
 
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 (RESULTS_DIR / "results.json").write_text(
