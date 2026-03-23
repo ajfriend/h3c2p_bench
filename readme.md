@@ -6,12 +6,12 @@ versions, using the Colorado state boundary as a test polygon at resolutions
 
 ## Checkpoints
 
-| Checkpoint | H3 source                 | Function benchmarked                              |
-|------------|---------------------------|---------------------------------------------------|
-| `v4.4.1`   | uber/h3 v4.4.1            | `cellsToLinkedMultiPolygon`                       |
-| `v4.5a`    | uber/h3 master            | `cellsToMultiPolygon`                             |
-| `gosper`   | ajfriend/h3 gosper branch | `cellsToMultiPolygonGosper` (pre-compacted input) |
-| `gosper+c` | ajfriend/h3 gosper branch | `compactCells` + `cellsToMultiPolygonGosper`      |
+| Checkpoint | H3 source                                                          | Function benchmarked                              |
+|------------|--------------------------------------------------------------------|---------------------------------------------------|
+| `v4.4.1`   | [uber/h3 v4.4.1](https://github.com/uber/h3/tree/v4.4.1)           | `cellsToLinkedMultiPolygon`                       |
+| `v4.5a`    | [uber/h3 master](https://github.com/uber/h3)                       | `cellsToMultiPolygon`                             |
+| `gosper`   | [ajfriend/h3 gosper branch](https://github.com/ajfriend/h3/pull/3) | `cellsToMultiPolygonGosper` (pre-compacted input) |
+| `gosper+c` | [ajfriend/h3 gosper branch](https://github.com/ajfriend/h3/pull/3) | `compactCells` + `cellsToMultiPolygonGosper`      |
 
 - **v4.4.1**: The old cells-to-polygon algorithm, before the rewrite.
 - **v4.5a**: The rewritten algorithm (planned for v4.5), without the Gosper optimization.
