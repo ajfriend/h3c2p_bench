@@ -14,7 +14,7 @@ import pandas as pd
 from tabulate import tabulate
 
 RUNS = 5
-COLUMN_ORDER = ["v4.4.1", "master", "gosper", "gosper_full"]
+COLUMN_ORDER = ["v4.4.1", "v4.5a", "gosper", "gosper+c"]
 
 ROOT = Path(__file__).resolve().parent
 CHECKPOINTS_DIR = ROOT / "checkpoints"
