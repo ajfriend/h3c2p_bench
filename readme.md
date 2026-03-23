@@ -1,6 +1,6 @@
 # H3 cells-to-polygon benchmarks
 
-Compares the performance of H3's cells-to-polygon functions across library
+Compares the performance of H3's cells-to-polygon functions across H3 library
 versions, using the Colorado state boundary as a test polygon at resolutions
 3–9.
 
