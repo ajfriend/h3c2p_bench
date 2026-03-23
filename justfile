@@ -8,7 +8,7 @@ compile checkpoint:
     h3=checkpoints/{{checkpoint}}/h3
     cmake -B $h3/build -S $h3 -DCMAKE_BUILD_TYPE=Release 2>&1 | tail -1
     cmake --build $h3/build --target h3 -j 2>&1 | tail -3
-    cc -O2 \
+    cc -O3 \
        -I $h3/build/src/h3lib/include \
        -I $h3/src/h3lib/include \
        -I $h3/src/apps/applib/include \
