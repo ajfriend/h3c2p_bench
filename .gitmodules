@@ -8,3 +8,7 @@
 	path = checkpoints/gosper/h3
 	url = https://github.com/ajfriend/h3.git
 	branch = gosper_iter_and_cells2poly
+[submodule "checkpoints/gosper_full/h3"]
+	path = checkpoints/gosper_full/h3
+	url = https://github.com/ajfriend/h3.git
+	branch = gosper_iter_and_cells2poly

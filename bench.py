@@ -1,6 +1,6 @@
 """Benchmark runner and reporter for H3 checkpoint comparison."""
 # /// script
-# dependencies = ["tabulate", "pandas"]
+# dependencies = ["tabulate", "pandas", "h3"]
 # ///
 
 import json
@@ -9,10 +9,12 @@ import subprocess
 import sys
 from pathlib import Path
 
+import h3
 import pandas as pd
 from tabulate import tabulate
 
 RUNS = 5
+COLUMN_ORDER = ["v4.4.1", "master", "gosper", "gosper_full"]
 
 ROOT = Path(__file__).resolve().parent
 CHECKPOINTS_DIR = ROOT / "checkpoints"
@@ -89,15 +91,38 @@ def fmt_us(us):
         return f"{us / 1_000:,.1f}ms"
     return f"{us:,.0f}µs"
 
+# Compute cell counts for each resolution
+colorado = h3.LatLngPoly(
+    [(37.0, -109.0), (37.0, -102.0), (41.0, -102.0), (41.0, -109.0)]
+)
+resolutions = sorted(
+    int(label.split("_")[-1])
+    for label in next(iter(all_data.values())).keys()
+)
+cell_counts = {}
+for res in resolutions:
+    cells = h3.polygon_to_cells(colorado, res)
+    compact = h3.compact_cells(cells)
+    cell_counts[f"colorado_res_{res}"] = {"cells": len(cells), "compact": len(compact)}
+
 df = pd.DataFrame(all_data).rename_axis("resolution")
+
+# Reorder columns: explicit order first, then any extras
+ordered = [c for c in COLUMN_ORDER if c in df.columns]
+ordered += [c for c in df.columns if c not in ordered]
+df = df[ordered]
+
 baseline = df.columns[0]
 
-# Build display table: formatted times + speedup columns
+# Build display table: cell counts, then times, then speedup columns
+counts_df = pd.DataFrame(cell_counts).T.rename_axis("resolution")
 display = pd.DataFrame(index=df.index)
-display[baseline] = df[baseline].map(fmt_us)
-for name in df.columns[1:]:
+display["cells"] = counts_df["cells"].map(lambda x: f"{x:,}")
+display["compact"] = counts_df["compact"].map(lambda x: f"{x:,}")
+for name in df.columns:
     display[name] = df[name].map(fmt_us)
-    speedup = df[name] / df[baseline]
+for name in df.columns[1:]:
+    speedup = df[baseline] / df[name]
     display[f"{name} vs"] = speedup.map(
         lambda x: f"{x:.1f}x" if x >= 1.05 else "~1x"
     )
