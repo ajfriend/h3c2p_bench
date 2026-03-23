@@ -14,13 +14,17 @@ versions, using the Colorado state boundary as a test polygon at resolutions
 | `gosper+c` | ajfriend/h3 gosper branch | `compactCells` + `cellsToMultiPolygonGosper`      |
 
 - **v4.4.1**: The old cells-to-polygon algorithm, before the rewrite.
-- **v4.5a**: The rewritten cells-to-polygon algorithm (planned for v4.5), but without the Gosper optimization.
+- **v4.5a**: The rewritten algorithm (planned for v4.5), without the Gosper optimization.
 - **gosper**: The Gosper-based algorithm operating on pre-compacted cells (compaction time not measured).
-- **gosper+c**: Same algorithm, but includes `compactCells` in the timed section — a fairer end-to-end comparison starting from uncompacted input.
+- **gosper+c**: Same, but includes `compactCells` in the timed section — a fairer end-to-end comparison starting from uncompacted input.
 
 ## Results
 
-Speedups are relative to `v4.4.1`. Times are the minimum across 5 runs.
+Times are the minimum across 5 runs. **vs** columns show speedup relative
+to `v4.4.1` (ratio of `v4.4.1` time / checkpoint time). **cells** and
+**compact** are the input sizes before and after `compactCells`.
+
+Example timings from an M3 MacBook Air:
 
 | resolution     |     cells | compact |  v4.4.1 |   v4.5a | gosper | gosper+c | v4.5a vs | gosper vs | gosper+c vs |
 |----------------|----------:|--------:|--------:|--------:|-------:|---------:|---------:|----------:|------------:|
@@ -31,12 +35,6 @@ Speedups are relative to `v4.4.1`. Times are the minimum across 5 runs.
 | colorado_res_7 |    47,823 |   1,419 |  56.3ms |  25.8ms |  2.1ms |    2.5ms |     2.2x |     27.4x |       22.3x |
 | colorado_res_8 |   334,719 |   3,813 | 444.4ms | 273.1ms |  7.5ms |   10.9ms |     1.6x |     59.4x |       40.9x |
 | colorado_res_9 | 2,343,047 |  10,169 |  14.58s |   2.00s | 38.2ms |   75.6ms |     7.3x |    382.1x |      193.0x |
-
-- **cells**: number of H3 cells covering Colorado at that resolution
-- **compact**: number of cells after `compactCells`
-- **gosper**: operates on pre-compacted input (compaction not timed)
-- **gosper+c**: compaction is included in the timed section
-- **vs** columns: speedup as a ratio of `v4.4.1` time / checkpoint time
 
 ## Usage
 

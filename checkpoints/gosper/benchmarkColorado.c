@@ -1,6 +1,6 @@
 /*
  * Benchmark cellsToMultiPolygonGosper on compacted Colorado cells at
- * resolutions 3-8.
+ * resolutions 3-9.
  */
 
 #include <stdlib.h>

@@ -1,6 +1,6 @@
 /*
  * Benchmark cellsToLinkedMultiPolygon on the Colorado polygon at resolutions
- * 3-7.
+ * 3-9.
  */
 
 #include <stdlib.h>

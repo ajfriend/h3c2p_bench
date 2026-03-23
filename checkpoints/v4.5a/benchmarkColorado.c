@@ -1,5 +1,5 @@
 /*
- * Benchmark cellsToMultiPolygon on the Colorado polygon at resolutions 3-7.
+ * Benchmark cellsToMultiPolygon on the Colorado polygon at resolutions 3-9.
  */
 
 #include <stdlib.h>

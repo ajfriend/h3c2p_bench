@@ -1,4 +1,4 @@
-[submodule "checkpoints/master/h3"]
+[submodule "checkpoints/v4.5a/h3"]
 	path = checkpoints/v4.5a/h3
 	url = https://github.com/uber/h3.git
 [submodule "checkpoints/v4.4.1/h3"]
@@ -8,7 +8,7 @@
 	path = checkpoints/gosper/h3
 	url = https://github.com/ajfriend/h3.git
 	branch = gosper_iter_and_cells2poly
-[submodule "checkpoints/gosper_full/h3"]
+[submodule "checkpoints/gosper+c/h3"]
 	path = checkpoints/gosper+c/h3
 	url = https://github.com/ajfriend/h3.git
 	branch = gosper_iter_and_cells2poly
