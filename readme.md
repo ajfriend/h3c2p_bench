@@ -39,7 +39,8 @@ Example timings from an M3 MacBook Air:
 ## Usage
 
 ```
-git clone --recursive <this-repo>
+git clone --recursive https://github.com/ajfriend/h3c2p_bench.git
+cd h3c2p_bench
 just
 ```
 
