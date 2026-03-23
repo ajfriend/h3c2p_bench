@@ -1,6 +1,5 @@
 /*
- * Benchmark cellsToLinkedMultiPolygon on the Colorado polygon at resolutions
- * 3-7.
+ * Benchmark cellsToMultiPolygon on the Colorado polygon at resolutions 3-7.
  */
 
 #include <stdlib.h>
@@ -40,17 +39,17 @@ static void getColoradoCells(int res, H3Index **outCells,
     *outNumCells = numCells;
 }
 
-#define BENCH_COLORADO(RES, ITERS)                                             \
-    {                                                                          \
-        H3Index *cells;                                                        \
-        int64_t numCells;                                                      \
-        getColoradoCells(RES, &cells, &numCells);                              \
-        BENCHMARK(colorado_res_##RES, ITERS, {                                 \
-            LinkedGeoPolygon lmpoly;                                           \
-            H3_EXPORT(cellsToLinkedMultiPolygon)(cells, numCells, &lmpoly);    \
-            H3_EXPORT(destroyLinkedMultiPolygon)(&lmpoly);                     \
-        });                                                                    \
-        free(cells);                                                           \
+#define BENCH_COLORADO(RES, ITERS)                                      \
+    {                                                                   \
+        H3Index *cells;                                                 \
+        int64_t numCells;                                               \
+        getColoradoCells(RES, &cells, &numCells);                       \
+        BENCHMARK(colorado_res_##RES, ITERS, {                          \
+            GeoMultiPolygon mpoly;                                      \
+            H3_EXPORT(cellsToMultiPolygon)(cells, numCells, &mpoly);    \
+            H3_EXPORT(destroyGeoMultiPolygon)(&mpoly);                  \
+        });                                                             \
+        free(cells);                                                    \
     }
 
 BEGIN_BENCHMARKS();
@@ -60,5 +59,6 @@ BENCH_COLORADO(4, 1000);
 BENCH_COLORADO(5, 500);
 BENCH_COLORADO(6, 100);
 BENCH_COLORADO(7, 10);
+BENCH_COLORADO(8, 5);
 
 END_BENCHMARKS();

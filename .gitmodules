@@ -1,6 +1,6 @@
-[submodule "h3-master"]
-	path = h3-master
+[submodule "checkpoints/master/h3"]
+	path = checkpoints/master/h3
 	url = https://github.com/uber/h3.git
-[submodule "h3-release"]
-	path = h3-release
+[submodule "checkpoints/v4.4.1/h3"]
+	path = checkpoints/v4.4.1/h3
 	url = https://github.com/uber/h3.git
