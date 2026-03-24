@@ -1,4 +1,5 @@
 results/
+checkpoints/*/benchmarkColorado
 checkpoints/*/h3/build/
 .venv/
 __pycache__/
