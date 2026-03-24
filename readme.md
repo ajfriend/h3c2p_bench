@@ -28,13 +28,13 @@ Example timings from an M3 MacBook Air:
 
 | resolution     |     cells | compact |  v4.4.1 |   v4.5a | gosper | gosper+c | v4.5a vs | gosper vs | gosper+c vs |
 |----------------|----------:|--------:|--------:|--------:|-------:|---------:|---------:|----------:|------------:|
-| colorado_res_3 |        20 |      14 |    27µs |    15µs |   14µs |     15µs |     1.9x |      1.9x |        1.9x |
-| colorado_res_4 |       140 |      56 |   162µs |    55µs |   47µs |     48µs |     2.9x |      3.4x |        3.4x |
-| colorado_res_5 |       974 |     170 |   1.2ms |   311µs |  167µs |    173µs |     3.8x |      7.1x |        6.9x |
-| colorado_res_6 |     6,831 |     501 |   8.4ms |   2.0ms |  579µs |    636µs |     4.2x |     14.5x |       13.2x |
-| colorado_res_7 |    47,823 |   1,419 |  56.3ms |  25.8ms |  2.1ms |    2.5ms |     2.2x |     27.4x |       22.3x |
-| colorado_res_8 |   334,719 |   3,813 | 444.4ms | 273.1ms |  7.5ms |   10.9ms |     1.6x |     59.4x |       40.9x |
-| colorado_res_9 | 2,343,047 |  10,169 |  14.58s |   2.00s | 38.2ms |   75.6ms |     7.3x |    382.1x |      193.0x |
+| colorado_res_3 |        20 |      14 |    27µs |    15µs |   14µs |     14µs |     1.8x |      1.9x |        1.9x |
+| colorado_res_4 |       140 |      56 |   159µs |    55µs |   46µs |     47µs |     2.9x |      3.4x |        3.4x |
+| colorado_res_5 |       974 |     170 |   1.2ms |   309µs |  163µs |    170µs |     3.8x |      7.3x |        7.0x |
+| colorado_res_6 |     6,831 |     501 |   8.2ms |   2.0ms |  566µs |    620µs |     4.1x |     14.5x |       13.3x |
+| colorado_res_7 |    47,823 |   1,419 |  55.1ms |  22.0ms |  2.0ms |    2.5ms |     2.5x |     27.2x |       22.2x |
+| colorado_res_8 |   334,719 |   3,813 | 409.2ms | 270.5ms |  7.0ms |   10.1ms |     1.5x |     58.7x |       40.4x |
+| colorado_res_9 | 2,343,047 |  10,169 |  14.05s |   2.00s | 35.0ms |   70.8ms |     7.0x |    401.4x |      198.3x |
 
 ## Usage
 
